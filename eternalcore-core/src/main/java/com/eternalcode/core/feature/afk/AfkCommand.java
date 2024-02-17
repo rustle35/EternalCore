@@ -6,6 +6,7 @@ import com.eternalcode.core.configuration.implementation.PluginConfiguration;
 import com.eternalcode.core.delay.Delay;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.notice.NoticeService;
+import com.eternalcode.core.reload.ReloadService;
 import com.eternalcode.core.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.context.Context;
 import dev.rollczi.litecommands.annotations.execute.Execute;
@@ -31,11 +32,11 @@ class AfkCommand {
     private final Delay<UUID> delay;
 
     @Inject
-    AfkCommand(NoticeService noticeService, PluginConfiguration pluginConfiguration, AfkService afkService) {
+    AfkCommand(NoticeService noticeService, PluginConfiguration pluginConfiguration, AfkService afkService, ReloadService reloadService) {
         this.noticeService = noticeService;
         this.pluginConfiguration = pluginConfiguration;
         this.afkService = afkService;
-        this.delay = new Delay<>(this.pluginConfiguration.afk);
+        this.delay = reloadService.register(new Delay<>(this.pluginConfiguration.afk));
     }
 
     @Execute

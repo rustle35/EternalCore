@@ -1,7 +1,6 @@
-package com.eternalcode.core;
+package com.eternalcode.core.reload;
 
 import com.eternalcode.annotations.scan.command.DescriptionDocs;
-import com.eternalcode.core.configuration.ConfigurationManager;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.google.common.base.Stopwatch;
 import dev.rollczi.litecommands.annotations.async.Async;
@@ -15,23 +14,23 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.concurrent.TimeUnit;
 
-@Command(name = "eternalcore")
+@Command(name = "eternalcore reload")
 @Permission("eternalcore.eternalcore")
-class EternalCoreCommand {
+class ReloadCommand {
 
     private static final String RELOAD_MESSAGE = "<b><gradient:#29fbff:#38b3ff>EternalCore:</gradient></b> <green>Configuration has ben successfully reloaded in %d ms.</green>";
 
-    private final ConfigurationManager configurationManager;
     private final MiniMessage miniMessage;
+    private final ReloadService reloadService;
 
     @Inject
-    EternalCoreCommand(ConfigurationManager configurationManager, MiniMessage miniMessage) {
-        this.configurationManager = configurationManager;
+    ReloadCommand(MiniMessage miniMessage, ReloadService reloadService) {
         this.miniMessage = miniMessage;
+        this.reloadService = reloadService;
     }
 
     @Async
-    @Execute(name = "reload")
+    @Execute
     @DescriptionDocs(description = "Reloads EternalCore configuration")
     void reload(@Context Audience audience) {
         long millis = this.reload();
@@ -42,7 +41,7 @@ class EternalCoreCommand {
 
     private long reload() {
         Stopwatch stopwatch = Stopwatch.createStarted();
-        this.configurationManager.reload();
+        this.reloadService.reload();
 
         return stopwatch.elapsed(TimeUnit.MILLISECONDS);
     }

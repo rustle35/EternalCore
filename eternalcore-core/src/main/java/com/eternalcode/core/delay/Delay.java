@@ -1,14 +1,15 @@
 package com.eternalcode.core.delay;
 
+import com.eternalcode.core.reload.Reloadable;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.time.Duration;
 import java.time.Instant;
 
-public class Delay<T> {
+public class Delay<T> implements Reloadable {
 
-    private final Cache<T, Instant> delays;
+    private Cache<T, Instant> delays;
 
     private final DelaySettings delaySettings;
 
@@ -44,6 +45,13 @@ public class Delay<T> {
 
     private Instant getDelayExpireMoment(T key) {
         return this.delays.asMap().getOrDefault(key, Instant.MIN);
+    }
+
+    @Override
+    public void reload() {
+        this.delays = CacheBuilder.newBuilder()
+            .expireAfterWrite(this.delaySettings.delay())
+            .build();
     }
 
 }

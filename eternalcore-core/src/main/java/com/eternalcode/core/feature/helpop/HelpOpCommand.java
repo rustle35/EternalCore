@@ -6,6 +6,7 @@ import com.eternalcode.core.delay.Delay;
 import com.eternalcode.core.event.EventCaller;
 import com.eternalcode.core.feature.helpop.event.HelpOpEvent;
 import com.eternalcode.core.injector.annotations.Inject;
+import com.eternalcode.core.reload.ReloadService;
 import com.eternalcode.multification.notice.NoticeBroadcast;
 import com.eternalcode.core.notice.NoticeService;
 import com.eternalcode.core.util.DurationUtil;
@@ -31,12 +32,12 @@ class HelpOpCommand {
     private final Delay<UUID> delay;
 
     @Inject
-    HelpOpCommand(NoticeService noticeService, PluginConfiguration config, EventCaller eventCaller, Server server) {
+    HelpOpCommand(NoticeService noticeService, PluginConfiguration config, EventCaller eventCaller, Server server, ReloadService reloadService) {
         this.noticeService = noticeService;
         this.config = config;
         this.eventCaller = eventCaller;
         this.server = server;
-        this.delay = new Delay<>(this.config.helpOp);
+        this.delay = reloadService.register(new Delay<>(this.config.helpOp));
     }
 
     @Execute

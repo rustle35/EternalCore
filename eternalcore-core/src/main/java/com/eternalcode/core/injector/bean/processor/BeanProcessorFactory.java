@@ -10,6 +10,8 @@ import com.eternalcode.core.injector.annotations.lite.LiteHandler;
 import com.eternalcode.core.publish.Publisher;
 import com.eternalcode.core.publish.Subscribe;
 import com.eternalcode.core.publish.Subscriber;
+import com.eternalcode.core.reload.ReloadService;
+import com.eternalcode.core.reload.Reloadable;
 import com.eternalcode.core.scheduler.Scheduler;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
 import dev.rollczi.litecommands.annotations.LiteCommandsAnnotations;
@@ -76,6 +78,10 @@ public final class BeanProcessorFactory {
             .onProcess(ReloadableConfig.class, (provider, config, configurationFile) -> {
                 ConfigurationManager configurationManager = provider.getDependency(ConfigurationManager.class);
                 configurationManager.load(config);
+            })
+            .onProcess(Reloadable.class, (provider, reloadable, none) -> {
+                ReloadService reloadService = provider.getDependency(ReloadService.class);
+                reloadService.register(reloadable);
             })
             .onProcess(Command.class, Object.class, (provider, command, none) -> {
                 LiteCommandsAnnotations<?> commandsBuilder = provider.getDependency(LiteCommandsAnnotations.class);

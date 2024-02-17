@@ -5,6 +5,7 @@ import com.eternalcode.core.configuration.implementation.PluginConfiguration;
 import com.eternalcode.core.delay.Delay;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.notice.NoticeService;
+import com.eternalcode.core.reload.ReloadService;
 import com.eternalcode.core.util.DurationUtil;
 import dev.rollczi.litecommands.annotations.command.Command;
 import dev.rollczi.litecommands.annotations.context.Context;
@@ -28,10 +29,10 @@ class RepairCommand {
     private final PluginConfiguration config;
 
     @Inject
-    RepairCommand(NoticeService noticeService, PluginConfiguration config) {
+    RepairCommand(NoticeService noticeService, PluginConfiguration config, ReloadService reloadService) {
         this.noticeService = noticeService;
         this.config = config;
-        this.delay = new Delay<>(this.config.repair);
+        this.delay = reloadService.register(new Delay<>(this.config.repair));
     }
 
     @Execute

@@ -6,6 +6,7 @@ import com.eternalcode.core.delay.Delay;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.notice.NoticeService;
 import com.eternalcode.core.placeholder.Placeholders;
+import com.eternalcode.core.reload.ReloadService;
 import com.eternalcode.core.util.DurationUtil;
 import com.eternalcode.core.viewer.Viewer;
 import dev.rollczi.litecommands.annotations.argument.Arg;
@@ -35,11 +36,11 @@ class RandomTeleportCommand {
     private final Delay<UUID> delay;
 
     @Inject
-    RandomTeleportCommand(NoticeService noticeService, RandomTeleportService randomTeleportService, PluginConfiguration config) {
+    RandomTeleportCommand(NoticeService noticeService, RandomTeleportService randomTeleportService, PluginConfiguration config, ReloadService reloadService) {
         this.noticeService = noticeService;
         this.randomTeleportService = randomTeleportService;
         this.config = config;
-        this.delay = new Delay<>(this.config.randomTeleport);
+        this.delay = reloadService.register(new Delay<>(this.config.randomTeleport));
     }
 
     @Execute

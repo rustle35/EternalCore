@@ -7,6 +7,7 @@ import com.eternalcode.core.configuration.composer.PositionComposer;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.injector.annotations.component.Service;
 import com.eternalcode.core.feature.language.Language;
+import com.eternalcode.core.reload.Reloadable;
 import com.eternalcode.core.shared.Position;
 import com.eternalcode.multification.cdn.MultificationNoticeCdnComposer;
 import com.eternalcode.multification.notice.Notice;
@@ -21,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class ConfigurationManager {
+public class ConfigurationManager implements Reloadable {
 
     private final ConfigurationBackupService configurationBackupService;
 
@@ -62,6 +63,7 @@ public class ConfigurationManager {
             .orThrow(RuntimeException::new);
     }
 
+    @Override
     public void reload() {
         this.configurationBackupService.createBackup();
 
@@ -69,4 +71,5 @@ public class ConfigurationManager {
             this.load(config);
         }
     }
+
 }
