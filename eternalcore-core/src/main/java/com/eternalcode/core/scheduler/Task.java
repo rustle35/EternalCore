@@ -4,7 +4,7 @@ public interface Task {
 
     void cancel();
 
-    boolean isCanceled();
+    boolean isCancelled();
 
     boolean isAsync();
 

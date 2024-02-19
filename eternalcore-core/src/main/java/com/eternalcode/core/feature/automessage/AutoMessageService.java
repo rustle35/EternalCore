@@ -4,6 +4,8 @@ import com.eternalcode.annotations.scan.feature.FeatureDocs;
 import com.eternalcode.core.configuration.implementation.PluginConfiguration;
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.injector.annotations.component.Service;
+import com.eternalcode.core.reload.Reloadable;
+import com.eternalcode.core.scheduler.Task;
 import com.eternalcode.multification.notice.Notice;
 import com.eternalcode.core.notice.NoticeService;
 import com.eternalcode.core.scheduler.Scheduler;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 
 @FeatureDocs(name = "AutoMessage", description = "Automatically sends messages to players at a given time interval.")
 @Service
-class AutoMessageService {
+class AutoMessageService implements Reloadable {
 
     private final AutoMessageRepository repository;
     private final AutoMessageSettings settings;
@@ -32,6 +34,7 @@ class AutoMessageService {
     private final Server server;
 
     private final AtomicInteger broadcastCount = new AtomicInteger(0);
+    private Task currentTask;
 
     @Inject
     AutoMessageService(AutoMessageRepository repository, AutoMessageSettings settings, NoticeService noticeService, PluginConfiguration config, Scheduler scheduler, Server server) {
@@ -72,7 +75,7 @@ class AutoMessageService {
     }
 
     private void tick() {
-        this.scheduler.laterAsync(this::tick, this.settings.interval());
+        this.currentTask = this.scheduler.laterAsync(this::tick, this.settings.interval());
 
         if (this.settings.enabled()) {
             this.broadcastNextMessage();
@@ -94,4 +97,14 @@ class AutoMessageService {
 
         return Option.ofOptional(messages.stream().skip(index).findFirst());
     }
+
+    @Override
+    public void reload() {
+        if (this.currentTask != null && !this.currentTask.isCancelled()) {
+            this.currentTask.cancel();
+        }
+
+        this.tick();
+    }
+
 }

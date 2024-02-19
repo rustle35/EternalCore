@@ -16,7 +16,7 @@ class BukkitTaskImpl implements Task {
     }
 
     @Override
-    public boolean isCanceled() {
+    public boolean isCancelled() {
         return this.rootTask.isCancelled();
     }
 
