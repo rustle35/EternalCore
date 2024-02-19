@@ -18,6 +18,7 @@ eternalShadowCompiler {
         website = "www.eternalcode.pl"
         version = "${project.version}"
         softDepend = listOf("PlaceholderAPI")
+        foliaSupported = true
     }
 
     shadowJar {
