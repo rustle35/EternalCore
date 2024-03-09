@@ -11,6 +11,7 @@ import dev.rollczi.litecommands.invocation.Invocation;
 import dev.rollczi.litecommands.suggestion.SuggestionContext;
 import dev.rollczi.litecommands.suggestion.SuggestionResult;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 
@@ -26,7 +27,7 @@ class EnchantmentArgument extends AbstractViewerArgument<Enchantment> {
 
     @Override
     public ParseResult<Enchantment> parse(Invocation<CommandSender> invocation, String argument, Translation translation) {
-        Enchantment enchantment = Enchantment.getByKey(NamespacedKey.minecraft(argument));
+        Enchantment enchantment = Registry.ENCHANTMENT.get(NamespacedKey.minecraft(argument));
 
         if (enchantment == null) {
             return ParseResult.failure(translation.argument().noEnchantment());
@@ -37,7 +38,7 @@ class EnchantmentArgument extends AbstractViewerArgument<Enchantment> {
 
     @Override
     public SuggestionResult suggest(Invocation<CommandSender> invocation, Argument<Enchantment> argument, SuggestionContext context) {
-        return Arrays.stream(Enchantment.values())
+        return Registry.ENCHANTMENT.stream()
             .map(Enchantment::getKey)
             .map(NamespacedKey::getKey)
             .collect(SuggestionResult.collector());

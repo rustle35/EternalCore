@@ -40,7 +40,7 @@ class RandomTeleportServiceImpl implements RandomTeleportService {
         Material.AIR,
         Material.CAVE_AIR,
         Material.VOID_AIR,
-        Material.GRASS,
+        Material.SHORT_GRASS,
         Material.TALL_GRASS,
         Material.VINE
     );
