@@ -20,7 +20,7 @@ public class VanishService {
 
     private final Plugin plugin;
 
-    public ArrayList<Player> invisibleList = new ArrayList<>();
+    public ArrayList<UUID> invisibleList = new ArrayList<>();
 
     @Inject
     public VanishService(Server server, Plugin plugin) {
@@ -45,26 +45,26 @@ public class VanishService {
         return false;
     }
 
-    public boolean playerIsVanished(Player player) {
-        if (this.invisibleList.contains(player)) {
-            this.invisibleList.remove(player);
+    public boolean playerIsVanished(UUID playerUniqueId) {
+        if (this.invisibleList.contains(playerUniqueId)) {
+            this.invisibleList.remove(playerUniqueId);
             return true;
         }
         else {
-            this.invisibleList.add(player);
+            this.invisibleList.add(playerUniqueId);
             return false;
         }
     }
 
-    public void vanish(Player player) {
+    public void vanish(UUID playerUniqueId) {
         for (Player people : Bukkit.getOnlinePlayers()) {
-            people.hidePlayer(this.plugin, player);
+            people.hidePlayer(this.plugin, Bukkit.getPlayer(UUID.fromString(playerUniqueId.toString())));
         }
     }
 
-    public void removeVanish(Player player) {
+    public void removeVanish(UUID playerUniqueId) {
         for (Player people : Bukkit.getOnlinePlayers()) {
-            people.showPlayer(this.plugin, player);
+            people.showPlayer(this.plugin, Bukkit.getPlayer(UUID.fromString(playerUniqueId.toString())));
         }
     }
 

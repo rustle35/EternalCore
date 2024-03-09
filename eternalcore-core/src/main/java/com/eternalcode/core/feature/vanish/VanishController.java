@@ -2,11 +2,14 @@ package com.eternalcode.core.feature.vanish;
 
 import com.eternalcode.core.injector.annotations.Inject;
 import com.eternalcode.core.injector.annotations.component.Controller;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
+
+import java.util.UUID;
 
 @Controller
 public class VanishController implements Listener {
@@ -24,7 +27,7 @@ public class VanishController implements Listener {
     public void playerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         for (int i = 0; i < this.vanishService.invisibleList.size(); i++) {
-            player.hidePlayer(this.plugin, this.vanishService.invisibleList.get(i));
+            player.hidePlayer(this.plugin, Bukkit.getPlayer(UUID.fromString(this.vanishService.invisibleList.get(i).toString())));
         }
     }
 

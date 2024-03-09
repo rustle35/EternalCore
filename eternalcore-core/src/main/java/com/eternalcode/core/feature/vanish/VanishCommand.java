@@ -10,6 +10,8 @@ import dev.rollczi.litecommands.annotations.permission.Permission;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 @Command(name = "vanish")
 @Permission("eternalcore.vanish")
 @FeatureDocs(
@@ -29,13 +31,14 @@ class VanishCommand {
     @Execute
     @DescriptionDocs(description = "Hide or show the player based on previous state")
     void execute(@Context Player player, @Context CommandSender commandSender) {
+        UUID uuid = player.getUniqueId();
         if (commandSender instanceof Player) {
-            if (!this.vanishService.playerIsVanished(player)) {
-                this.vanishService.vanish(player);
+            if (!this.vanishService.playerIsVanished(uuid)) {
+                this.vanishService.vanish(uuid);
                 commandSender.sendMessage("You are now hidden to other players on the server.");
             }
             else {
-                this.vanishService.removeVanish(player);
+                this.vanishService.removeVanish(uuid);
                 commandSender.sendMessage("You are now visible to other players on the server.");
             }
         }
